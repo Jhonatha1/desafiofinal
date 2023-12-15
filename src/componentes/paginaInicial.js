@@ -1,16 +1,26 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../estilos/styles.css';
+import axios from 'axios';
 
 const Login = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+//adicionar questão de verificação se usuário já existe no db.json
+
+  const handleLogin = async () => {
     if (name && email) {
-      navigate('/questao1');
+      try {
+        await axios.post('http://localhost:4000/usuarios', {
+          name,
+          email,
+        });
+        navigate('/questao1');
+      } catch (error) {
+        console.error('Erro ao enviar dados para a API:', error);
+      }
     } else {
       alert('Por favor, preencha todos os campos.');
     }

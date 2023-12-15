@@ -1,0 +1,26 @@
+{
+  "usuarios": [
+    {
+      "name": "Yanky",
+      "email": "Yanky@gmail.com",
+      "id": 1
+    },
+    {
+      "name": "Yanky",
+      "email": "Yankyboa@gmail.com",
+      "id": 2
+    }
+  ],
+  "respostas": [
+    {
+      "respostas": [
+        {
+          "id": 1,
+          "resposta": "A",
+          "pontuacao": 100
+        }
+      ],
+      "id": 1
+    }
+  ]
+}

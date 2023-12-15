@@ -40,3 +40,63 @@ body {
   .login-container button:hover {
     background-color: #0056b3;
   }
+
+  .page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .page-container header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .page-container header h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+  
+  .page-container header div {
+    display: flex;
+    flex-direction: grid;
+    align-items: center;
+  }
+  
+  .page-container header span {
+    font-size: 16px;
+  }
+  
+  .page-container p {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .opcoes-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .botoes-container {
+    display: flex;
+    justify-content: right;
+    margin-bottom: 20px;
+  }
+
+  .botoes-container button {
+    width: 50%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px; 
+    box-sizing: border-box;
+  }
+
+    .botoes-container button:hover {
+        background-color: #0056b3;
+    }

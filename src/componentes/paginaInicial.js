@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../estilos/styles.css';
 import axios from 'axios';
 
 const Login = () => {
@@ -8,16 +7,43 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
-//adicionar questão de verificação se usuário já existe no db.json
+  const [userId, setUserId] = useState(null); //novo estado para armazenar o ID do usuário
+
+  const checkUserExists = async (email) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/usuarios?email=${email}`);
+      const existingUser = response.data[0];
+      return existingUser;
+    } catch (error) {
+      console.error('Erro ao verificar usuário:', error);
+      return null;
+    }
+  };
 
   const handleLogin = async () => {
-    if (name && email) {
+    if (name.trim() !== '' && email.trim() !== '') {
       try {
-        await axios.post('http://localhost:4000/usuarios', {
-          name,
-          email,
-        });
-        navigate('/questao1');
+        const existingUser = await checkUserExists(email);
+
+        if (existingUser) {
+          //se Usuário já existe, use o ID existente
+          console.log('Usuário já existe. ID:', existingUser.id);
+          setUserId(existingUser.id); //armazena o ID do usuário no estado
+          navigate('/questao1', { replace: true });
+        } else {
+          //cria um novo usuário e obtém o ID
+          const response = await axios.post('http://localhost:4000/usuarios', {
+            name,
+            email,
+          });
+          const newUser = response.data;
+          const newUserId = newUser.id;
+          setUserId(newUserId); //armazena o ID do usuário no estado
+
+          //navega para a próxima página (por exemplo, questão 1) com o ID do novo usuário
+          console.log('Novo usuário criado. ID:', newUserId);
+          navigate('/questao1', { replace: true });
+        }
       } catch (error) {
         console.error('Erro ao enviar dados para a API:', error);
       }
@@ -31,13 +57,13 @@ const Login = () => {
       <h1><center>INICIAR SIMULADO</center></h1>
       <label>
         Nome:
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
       </label>
       <br></br>
       <br></br>
       <label>
         Email:
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </label>
       <br></br>
       <br></br>

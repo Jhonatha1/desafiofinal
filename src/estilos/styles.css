@@ -79,6 +79,8 @@ body {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    justify-content: center;
+
   }
 
   .botoes-container {
@@ -97,6 +99,22 @@ body {
     box-sizing: border-box;
   }
 
-    .botoes-container button:hover {
+  .botoes-container button:hover {
         background-color: #0056b3;
-    }
+  }
+
+  .matriz-container {
+      text-align: center; 
+      margin: 20px auto; 
+      font-size: 20px; 
+  }
+
+  .opcoes-lista {
+    list-style-type: none;
+    padding: 0;
+    justify-content: center;
+  }
+  
+  
+  
+ 

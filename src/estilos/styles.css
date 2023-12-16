@@ -77,9 +77,7 @@ body {
 
   .opcoes-container {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 20px;
-    justify-content: center;
 
   }
 
@@ -109,11 +107,39 @@ body {
       font-size: 20px; 
   }
 
+  .tabela-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: black;
+    text-align: center;
+  }
+  .tabela-container-questao3 {
+    display: flex;
+    justify-content: center;
+    color: black;
+    text-align: center;
+        
+  }
+
   .opcoes-lista {
     list-style-type: none;
     padding: 0;
+    margin-bottom: 20px;
+  }
+
+  .opcoes-lista li{
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+    display: inline-block;
+    justify-content: left;
+  }
+
+  .opcoes-lista ul{
     justify-content: center;
   }
+
   
   
   

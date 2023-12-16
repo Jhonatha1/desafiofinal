@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './componentes/paginaInicial';
 import PaginaQuestao1 from './componentes/paginaQuestao1';
 import PaginaQuestao2 from './componentes/paginaQuestao2';
+import PaginaQuestao3 from './componentes/paginaQuestao3';
 import { UserProvider } from './componentes/userContext';
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
           <Route path="/" element={<Login />} />
           <Route path="/questao1" element={<PaginaQuestao1 />} />
           <Route path="/questao2" element={<PaginaQuestao2 />} />
+          <Route path="/questao3" element={<PaginaQuestao3 />} />
         </Routes>
       </Router>
     </UserProvider>

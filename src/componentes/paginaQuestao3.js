@@ -5,8 +5,12 @@ import axios from 'axios';
 import '../estilos/styles.css';
 import { useUser } from './userContext';
 import {  BlockMath } from 'react-katex';
+import { IoMdMale } from "react-icons/io";
+import { IoMdFemale } from "react-icons/io";
+import { FaSquareFull } from "react-icons/fa6";
 
-const PaginaQuestao2 = () => {
+
+const PaginaQuestao3 = () => {
     const navigate = useNavigate();
     const { userId } = useUser(); 
   
@@ -55,15 +59,16 @@ const PaginaQuestao2 = () => {
     alert('Revisar Depois');
   };
 
-  const TabelaQuestao2 = () => {
-    const disciplinas = ['Matemática', 'Português', 'Geografia', 'História'];
-    const bimestres = ['', '1º Bimestre', '2º Bimestre', '3º Bimestre', '4º Bimestre'];
+  const TabelaQuestao3 = () => {
+    const disciplinas = ['', 'Alelo A', 'Alelo B', 'Alelo C', 'Alelo D'];
+    const bimestres = ['',<IoMdMale/>,<IoMdFemale/>, '1', '2', '3', '4', '5', ] 
   
     const notas = {
-      'Matemática': [5.9, 6.2, 4.5, 5.5],
-      'Português': [6.6, 7.1, 6.5, 8.4],
-      'Geografia': [8.6, 6.8, 7.8, 9.0],
-      'História': [6.2, 5.6, 5.9, 7.7],
+      '':['','','','','','',''],
+      'Alelo A': ['','','','','','','',''],
+      'Alelo B': [<FaSquareFull/>,'',<FaSquareFull/>,<FaSquareFull/>,<FaSquareFull/>,<FaSquareFull/>,<FaSquareFull/>],
+      'Alelo C': ['',<FaSquareFull/>,<FaSquareFull/>,'',<FaSquareFull/>,'',<FaSquareFull/>],
+      'Alelo D': ['','','','','',<FaSquareFull/>,''],
     };
   
     const renderizarCelulas = () => {
@@ -79,7 +84,7 @@ const PaginaQuestao2 = () => {
       disciplinas.forEach((disciplina, i) => {
         const linha = [<td key={`disciplina-${i}`}>{disciplina}</td>];
   
-        for (let j = 0; j < 4; j++) {
+        for (let j = 0; j < 7; j++) {
           linha.push(<td key={`nota-${i}-${j + 1}`}>{notas[disciplina][j]}</td>);
         }
   
@@ -90,67 +95,55 @@ const PaginaQuestao2 = () => {
     };
   
     return (
-      <table border="1">
+      <table border="0">
         <tbody>{renderizarCelulas()}</tbody>
       </table>
     );
   };
 
-  const MatrizLetraA = () => {
-    //exibição da matriz da letra A
-    const matrizLatex = '\\begin{bmatrix} \\frac{1}{2} & \\frac{1}{2} & \\frac{1}{2} & \\frac{1}{2} \\end{bmatrix}';
+  const TabelaDoisQuestao3 = () => {
+    const disciplinas = ['', 'Alelo E', 'Alelo F', 'Alelo G', 'Alelo H'];
+    const bimestres = ['',<IoMdMale/>,<IoMdFemale/>, '1', '2', '3', '4', '5', ] 
+  
+    const notas = {
+      '':['','','','','','',''],
+      'Alelo E': [<FaSquareFull/>,'',<FaSquareFull/>,<FaSquareFull/>,'','',<FaSquareFull/>,''],
+      'Alelo F': ['','','','','','','',''],
+      'Alelo G': [<FaSquareFull/>,<FaSquareFull/>,<FaSquareFull/>,'',<FaSquareFull/>,<FaSquareFull/>,''],
+      'Alelo H': ['','','','',<FaSquareFull/>,'',''],
+    };
+  
+    const renderizarCelulas = () => {
+      const celulas = [];
+  
+      //renderiza a primeira linha com os rótulos dos bimestres
+      const rotulosBimestres = bimestres.map((rotulo, index) => (
+        <th key={`bimestre-${index}`}>{rotulo}</th>
+      ));
+      celulas.push(<tr key="rotulos-bimestres">{rotulosBimestres}</tr>);
+  
+      //renderiza as demais linhas com os rótulos das disciplinas e as notas
+      disciplinas.forEach((disciplina, i) => {
+        const linha = [<td key={`disciplina-${i}`}>{disciplina}</td>];
+  
+        for (let j = 0; j < 7; j++) {
+          linha.push(<td key={`nota-${i}-${j + 1}`}>{notas[disciplina][j]}</td>);
+        }
+  
+        celulas.push(<tr key={`linha-${i}`}>{linha}</tr>);
+      });
+  
+      return celulas;
+    };
   
     return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
+      <table border="0">
+        <tbody>{renderizarCelulas()}</tbody>
+      </table>
     );
   };
 
-  const MatrizLetraB = () => {
-    //exibição da matriz da letra B
-    const matrizLatex = '\\begin{bmatrix} \\frac{1}{4} & \\frac{1}{4} & \\frac{1}{4} & \\frac{1}{4} \\end{bmatrix}';
   
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
-
-  const MatrizLetraC = () => {
-    //exibição da matriz da letra C
-    const matrizLatex = '\\begin{bmatrix} \ 1 \\\\ \\\\ \ 1 \\\\ \\\\ \ 1 \\\\ \\\\ \ 1 \\end{bmatrix}';
-  
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
-
-  const MatrizLetraD = () => {
-    //exibição da matriz da letra D
-    const matrizLatex = '\\begin{bmatrix} \\frac{1}{2} \\\\ \\\\ \\frac{1}{2} \\\\ \\\\ \\frac{1}{2} \\\\ \\\\ \\frac{1}{2} \\end{bmatrix}';
-  
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
-
-  
-  const MatrizLetraE = () => {
-    //exibição da matriz da letra E
-    const matrizLatex = '\\begin{bmatrix} \\frac{1}{4} \\\\ \\\\ \\frac{1}{4} \\\\ \\\\ \\frac{1}{4} \\\\ \\\\ \\frac{1}{4} \\end{bmatrix}';
-  
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
   
   return (
     <div className='page-container'>
@@ -159,10 +152,10 @@ const PaginaQuestao2 = () => {
           <Link to="/">
             <IoMdHome size={24} />
           </Link>
-          <h1>Questão 2</h1>
+          <h1>Questão 3</h1>
           </div>
           <div className='header-right'>
-            <span>Prova: Matemática e suas tecnologias </span>
+            <span>Prova: Ciências da Natureza e suas tecnologias </span>
             <span>Tempo: 1m.20s</span>
           </div>
         </header>
@@ -170,15 +163,20 @@ const PaginaQuestao2 = () => {
         
         <div className='questao-content'>
           <p>
-          Um aluno registrou as notas bimestrais de algumas de suas disciplinas numa tabela. Ele observou que as entradas numéricas da tabela formavam uma matriz 4x4, e que poderia calcular as médias anuais dessas disciplinas usando produto de matrizes. Todas as provas possuíam o mesmo peso, e a tabela que ele conseguiu é mostrada a seguir.
+          Um pesquisador observou, em uma árvore, um ninho de uma espécie de falcão. Apenas um filhote apresentava uma coloração típica de penas de ambos os pais. Foram coletadas amostras de DNA dos pais e filhotes para caracterização genética dos alelos responsáveis pela coloração das penas. O perfil de bandas obtido para cada indivíduo do ninho para os lócus 1 e 2, onde se localizam os genes dessa característica, está representado na figura.
           </p>
+          <h5><b><center>Padrões de bandas em gel das moléculas de DNA dos indivíduos</center></b></h5>
         </div>
-       <div className='tabela-container'>
-        <TabelaQuestao2 />
+       <div className='tabela-container-questao3'>
+        <TabelaQuestao3 />
+        </div>
+        <br></br><br></br>
+        <div className='tabela-container-questao3'>
+        <TabelaDoisQuestao3 />
         </div>
 
         <div className='opcoes-container'>
-        <h6>Para obter essas médias, ele multiplicou a matriz obtida a partir da tabela por</h6>
+        <h6>Dos filhotes, qual apresenta a coloração típica de penas dos pais?</h6>
 
         <div className="opcoes-lista">
           <ul>
@@ -193,10 +191,9 @@ const PaginaQuestao2 = () => {
                 checked={respostaSelecionada === 'A'}
                 onChange={() => handleSelecionarResposta('A')}
               />
-              A <MatrizLetraA />
-            </label>
+A            </label>
           </li>
-          <br></br>
+          
           <li>
             <label>
               <input
@@ -206,10 +203,9 @@ const PaginaQuestao2 = () => {
                 checked={respostaSelecionada === 'B'}
                 onChange={() => handleSelecionarResposta('B')}
               />
-              B <MatrizLetraB />
-            </label>
+B            </label>
           </li>
-          <br></br>
+          
           <li>
             <label>
               <input
@@ -219,10 +215,10 @@ const PaginaQuestao2 = () => {
                 checked={respostaSelecionada === 'C'}
                 onChange={() => handleSelecionarResposta('C')}
               />
-              C <MatrizLetraC />
-
+C
             </label>
           </li>
+          
           <li>
             <label>
               <input
@@ -232,23 +228,10 @@ const PaginaQuestao2 = () => {
                 checked={respostaSelecionada === 'D'}
                 onChange={() => handleSelecionarResposta('D')}
               />
-              D <MatrizLetraD />
-
+D
             </label>
           </li>
-          <li>
-            <label>
-              <input
-                type="radio"
-                name="opcao"
-                value="E"
-                checked={respostaSelecionada === 'E'}
-                onChange={() => handleSelecionarResposta('E')}
-              />
-              E <MatrizLetraE />
-
-            </label>
-          </li>
+          
         </ul>
         </div>
         
@@ -263,4 +246,4 @@ const PaginaQuestao2 = () => {
 
 
 
-export default PaginaQuestao2;
+export default PaginaQuestao3;

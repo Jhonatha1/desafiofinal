@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../estilos/styles.css';
 import 'katex/dist/katex.min.css';
-import { InlineMath, BlockMath } from 'react-katex';
+import {  BlockMath } from 'react-katex';
 
 
 const PaginaQuestao1 = () => {
@@ -103,12 +103,13 @@ const PaginaQuestao1 = () => {
         <div className='opcoes-container'>
         <h6>Com base nessas informações, o banco que transferiu a maior quantia via TED é o banco:</h6>
         
-        <ul className="opcoes-lista">
+        <div className="opcoes-lista">
+          <ul>
           <br></br>
           <br></br>
           <li>
             <label>
-              <input
+              A<input
                 type="radio"
                 name="opcao"
                 value="A"
@@ -118,9 +119,10 @@ const PaginaQuestao1 = () => {
               1
             </label>
           </li>
+          <br></br>
           <li>
             <label>
-              <input
+              B<input
                 type="radio"
                 name="opcao"
                 value="B"
@@ -130,9 +132,10 @@ const PaginaQuestao1 = () => {
               2
             </label>
           </li>
+          <br></br>
           <li>
             <label>
-              <input
+              C<input
                 type="radio"
                 name="opcao"
                 value="C"
@@ -142,9 +145,10 @@ const PaginaQuestao1 = () => {
               3
             </label>
           </li>
+          <br></br>
           <li>
             <label>
-              <input
+              D<input
                 type="radio"
                 name="opcao"
                 value="D"
@@ -154,7 +158,8 @@ const PaginaQuestao1 = () => {
               4
             </label>
           </li>
-        </ul>
+          </ul>
+        </div>
         
       </div>
       <div className='botoes-container'>

@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../estilos/styles.css';
 import { useUser } from './userContext';
-import {  BlockMath } from 'react-katex';
 import { IoMdMale } from "react-icons/io";
 import { IoMdFemale } from "react-icons/io";
 import { FaSquareFull } from "react-icons/fa6";
@@ -37,7 +36,7 @@ const PaginaQuestao3 = () => {
           respostas.push({
             resposta: respostaSelecionada,
             pontuacao: pontuacaoAtual,
-            questao: 1,
+            questao: 3,
           });
     
           //atualiza o banco de dados com as novas respostas
@@ -48,7 +47,7 @@ const PaginaQuestao3 = () => {
     
           //use navigate para ir para a próxima questão
           
-          navigate('/questao3');
+          navigate('/questao4');
         } catch (error) {
           console.error('Erro ao salvar resposta:', error);
         }

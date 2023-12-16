@@ -4,9 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../estilos/styles.css';
 import { useUser } from './userContext';
-import {  BlockMath } from 'react-katex';
 
-const PaginaQuestao2 = () => {
+
+const PaginaQuestao4 = () => {
     const navigate = useNavigate();
     const { userId } = useUser(); 
   
@@ -33,7 +33,7 @@ const PaginaQuestao2 = () => {
           respostas.push({
             resposta: respostaSelecionada,
             pontuacao: pontuacaoAtual,
-            questao: 2,
+            questao: 3,
           });
     
           //atualiza o banco de dados com as novas respostas
@@ -44,7 +44,7 @@ const PaginaQuestao2 = () => {
     
           //use navigate para ir para a próxima questão
           
-          navigate('/questao3');
+          navigate('/gabarito');
         } catch (error) {
           console.error('Erro ao salvar resposta:', error);
         }
@@ -55,16 +55,16 @@ const PaginaQuestao2 = () => {
     alert('Revisar Depois');
   };
 
-  const TabelaQuestao2 = () => {
-    const disciplinas = ['Matemática', 'Português', 'Geografia', 'História'];
-    const bimestres = ['', '1º Bimestre', '2º Bimestre', '3º Bimestre', '4º Bimestre'];
+  const TabelaQuestao4 = () => {
+    const disciplinas = ['I', 'II', 'III'];
+    const bimestres = ['ANO', 'RECEITA(EM BILHÕES DE REAIS)'];
   
     const notas = {
-      'Matemática': [5.9, 6.2, 4.5, 5.5],
-      'Português': [6.6, 7.1, 6.5, 8.4],
-      'Geografia': [8.6, 6.8, 7.8, 9.0],
-      'História': [6.2, 5.6, 5.9, 7.7],
+        'I': ['2,2'],
+        'II': ['4,2'],
+        'III': ['7,4'],
     };
+        
   
     const renderizarCelulas = () => {
       const celulas = [];
@@ -79,7 +79,7 @@ const PaginaQuestao2 = () => {
       disciplinas.forEach((disciplina, i) => {
         const linha = [<td key={`disciplina-${i}`}>{disciplina}</td>];
   
-        for (let j = 0; j < 4; j++) {
+        for (let j = 0; j < 1; j++) {
           linha.push(<td key={`nota-${i}-${j + 1}`}>{notas[disciplina][j]}</td>);
         }
   
@@ -90,67 +90,13 @@ const PaginaQuestao2 = () => {
     };
   
     return (
-      <table border="1">
+      <table border="4">
         <tbody>{renderizarCelulas()}</tbody>
       </table>
     );
   };
 
-  const MatrizLetraA = () => {
-    //exibição da matriz da letra A
-    const matrizLatex = '\\begin{bmatrix} \\frac{1}{2} & \\frac{1}{2} & \\frac{1}{2} & \\frac{1}{2} \\end{bmatrix}';
   
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
-
-  const MatrizLetraB = () => {
-    //exibição da matriz da letra B
-    const matrizLatex = '\\begin{bmatrix} \\frac{1}{4} & \\frac{1}{4} & \\frac{1}{4} & \\frac{1}{4} \\end{bmatrix}';
-  
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
-
-  const MatrizLetraC = () => {
-    //exibição da matriz da letra C
-    const matrizLatex = '\\begin{bmatrix} \ 1 \\\\ \\\\ \ 1 \\\\ \\\\ \ 1 \\\\ \\\\ \ 1 \\end{bmatrix}';
-  
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
-
-  const MatrizLetraD = () => {
-    //exibição da matriz da letra D
-    const matrizLatex = '\\begin{bmatrix} \\frac{1}{2} \\\\ \\\\ \\frac{1}{2} \\\\ \\\\ \\frac{1}{2} \\\\ \\\\ \\frac{1}{2} \\end{bmatrix}';
-  
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
-
-  
-  const MatrizLetraE = () => {
-    //exibição da matriz da letra E
-    const matrizLatex = '\\begin{bmatrix} \\frac{1}{4} \\\\ \\\\ \\frac{1}{4} \\\\ \\\\ \\frac{1}{4} \\\\ \\\\ \\frac{1}{4} \\end{bmatrix}';
-  
-    return (
-      <div>
-        <BlockMath math={matrizLatex} />
-      </div>
-    );
-  };
   
   return (
     <div className='page-container'>
@@ -159,10 +105,10 @@ const PaginaQuestao2 = () => {
           <Link to="/">
             <IoMdHome size={24} />
           </Link>
-          <h1>Questão 2</h1>
+          <h1>Questão 4</h1>
           </div>
           <div className='header-right'>
-            <span>Prova: Matemática e suas tecnologias </span>
+            <span>Prova: Ciências da Natureza e suas tecnologias </span>
             <span>Tempo: 1m.20s</span>
           </div>
         </header>
@@ -170,15 +116,22 @@ const PaginaQuestao2 = () => {
         
         <div className='questao-content'>
           <p>
-          Um aluno registrou as notas bimestrais de algumas de suas disciplinas numa tabela. Ele observou que as entradas numéricas da tabela formavam uma matriz 4x4, e que poderia calcular as médias anuais dessas disciplinas usando produto de matrizes. Todas as provas possuíam o mesmo peso, e a tabela que ele conseguiu é mostrada a seguir.
+          Um gerente decidiu fazer um estudo financeiro da empresa onde trabalha analisando as receitas anuais dos três últimos anos. Tais receitas são apresentadas no quadro:
           </p>
         </div>
-       <div className='tabela-container'>
-        <TabelaQuestao2 />
+       <div className='tabela-container-questao3'>
+        <TabelaQuestao4/>
+        </div>
+        
+
+        <div className='questao-content'>
+            <p>
+            Estes dados serão utilizados para projetar a receita mínima esperada para o ano atual (ano IV). pois a receita esperada para o ano IV é obtida em função das variações das receitas anuais anteriores, utilizando a seguinte regra: a variação do ano IV para o ano III será igual à variação do ano III para o Il adicionada à média aritmética entre essa variação e a variação do ano Il para o I.
+            </p>
         </div>
 
         <div className='opcoes-container'>
-        <h6>Para obter essas médias, ele multiplicou a matriz obtida a partir da tabela por</h6>
+        <h6>O valor da receita mínima esperada, em bilhão de reais, será de:</h6>
 
         <div className="opcoes-lista">
           <ul>
@@ -186,6 +139,7 @@ const PaginaQuestao2 = () => {
           <br></br>
           <li>
             <label>
+                A
               <input
                 type="radio"
                 name="opcao"
@@ -193,12 +147,13 @@ const PaginaQuestao2 = () => {
                 checked={respostaSelecionada === 'A'}
                 onChange={() => handleSelecionarResposta('A')}
               />
-              A <MatrizLetraA />
-            </label>
+          </label>
+          10
           </li>
-          <br></br>
+          <br></br>     
           <li>
             <label>
+                B
               <input
                 type="radio"
                 name="opcao"
@@ -206,12 +161,13 @@ const PaginaQuestao2 = () => {
                 checked={respostaSelecionada === 'B'}
                 onChange={() => handleSelecionarResposta('B')}
               />
-              B <MatrizLetraB />
-            </label>
+         </label>
+         12
           </li>
           <br></br>
           <li>
             <label>
+                C
               <input
                 type="radio"
                 name="opcao"
@@ -219,12 +175,13 @@ const PaginaQuestao2 = () => {
                 checked={respostaSelecionada === 'C'}
                 onChange={() => handleSelecionarResposta('C')}
               />
-              C <MatrizLetraC />
-
             </label>
+            13,2
           </li>
+          <br></br>
           <li>
             <label>
+                D
               <input
                 type="radio"
                 name="opcao"
@@ -232,23 +189,10 @@ const PaginaQuestao2 = () => {
                 checked={respostaSelecionada === 'D'}
                 onChange={() => handleSelecionarResposta('D')}
               />
-              D <MatrizLetraD />
-
             </label>
+            14,4
           </li>
-          <li>
-            <label>
-              <input
-                type="radio"
-                name="opcao"
-                value="E"
-                checked={respostaSelecionada === 'E'}
-                onChange={() => handleSelecionarResposta('E')}
-              />
-              E <MatrizLetraE />
-
-            </label>
-          </li>
+          
         </ul>
         </div>
         
@@ -263,4 +207,4 @@ const PaginaQuestao2 = () => {
 
 
 
-export default PaginaQuestao2;
+export default PaginaQuestao4;

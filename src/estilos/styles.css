@@ -32,9 +32,10 @@ body {
     padding: 10px;
     background-color: #007bff;
     color: #fff;
-    border: none;
-    border-radius: 5px; 
+    border-radius: 25px; 
     box-sizing: border-box;
+    margin-left: 5px;
+
   }
   
   .login-container button:hover {
@@ -88,13 +89,13 @@ body {
   }
 
   .botoes-container button {
-    width: 50%;
+    width: 25%;
     padding: 10px;
     background-color: #007bff;
     color: #fff;
-    border: none;
     border-radius: 5px; 
     box-sizing: border-box;
+    margin-left: 5px;
   }
 
   .botoes-container button:hover {

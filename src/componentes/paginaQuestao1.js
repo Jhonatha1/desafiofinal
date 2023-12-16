@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../estilos/styles.css';
+import 'katex/dist/katex.min.css';
+import { InlineMath, BlockMath } from 'react-katex';
+
 
 const PaginaQuestao1 = () => {
   const navigate = useNavigate();
@@ -15,27 +18,19 @@ const PaginaQuestao1 = () => {
   const userId = location.state?.userId;
 
 
-  function matrizQuestao1() {
-    const matriz = [
-      [0, 2, 0, 2, 2],
-      [0, 0, 2, 1, 0],
-      [1, 2, 0, 1, 1],
-      [0, 2, 2, 0, 0],
-      [3, 0, 1, 1, 0]
-    ];
+  const matrizQuestao1 = () => {
+    //exibição da matriz
+    const matrizLatex = 'A =\\begin{bmatrix} 0 & 2 & 0 & 2 & 2 \\\\ 0 & 0 & 2 & 1 & 0 \\\\ 1 & 2 & 0 & 1 & 1 \\\\ 0 & 2 & 2 & 0 & 0 \\\\ 3 & 0 & 1 & 1 & 0 \\end{bmatrix}';
   
     return (
       <div>
-  
-        {matriz.map((linha, indiceLinha) => (
-          <div key={indiceLinha}>
-            [ {linha.join('    ')} ]
-          </div>
-        ))}
-  
+        
+        <BlockMath math={matrizLatex} />
       </div>
     );
-  }
+  };
+  
+  
 
   const handleSelecionarResposta = (opcao) => {
     setRespostaSelecionada(opcao);
@@ -100,7 +95,7 @@ const PaginaQuestao1 = () => {
           A Transferência Eletrônica Disponível (TED) é uma transação financeira de valores entre diferentes bancos. Um economista decide analisar os valores enviados por meio de TEDs entre cinco bancos (1,2, 3, 4 e 5) durante um mês. Para isso, ele dispõe esses valores em uma matriz A = [aij], em que 1 ≤ 5 e 1 ≤ j ≤ 5, e o elemento aij corresponde ao total proveniente das operações feitas via TED, em milhão de real, transferidos do banco i para o banco j durante o mês. Observe que os elementos aij = 0, uma vez que TED é uma transferência entre bancos distintos. Esta é a matriz obtida para essa análise:
           </p>
         </div>
-        <div className='matriz-container'>
+        <div className='matriz-container'> 
           {matrizQuestao1()}
           
         </div>

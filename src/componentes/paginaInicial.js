@@ -26,23 +26,24 @@ const Login = () => {
         const existingUser = await checkUserExists(email);
 
         if (existingUser) {
-          //se Usuário já existe, use o ID existente
+          //se o usuário já existe, use o ID existente
           console.log('Usuário já existe. ID:', existingUser.id);
           setUserId(existingUser.id); //armazena o ID do usuário no estado
-          navigate('/questao1', { replace: true });
+          navigate('/questao1', { state: { userId: existingUser.id }, replace: true });
         } else {
-          //cria um novo usuário e obtém o ID
+          //se o usuário não existe, cria um novo usuário e obtém o ID
           const response = await axios.post('http://localhost:4000/usuarios', {
             name,
             email,
+            respostas: [],
           });
           const newUser = response.data;
           const newUserId = newUser.id;
-          setUserId(newUserId); //armazena o ID do usuário no estado
-
+          setUserId(newUserId); //armazena o ID do novo usuário no estado
+        
           //navega para a próxima página (por exemplo, questão 1) com o ID do novo usuário
           console.log('Novo usuário criado. ID:', newUserId);
-          navigate('/questao1', { replace: true });
+          navigate('/questao1', { state: { userId: newUserId }, replace: true });
         }
       } catch (error) {
         console.error('Erro ao enviar dados para a API:', error);

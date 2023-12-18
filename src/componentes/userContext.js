@@ -3,23 +3,31 @@ import { createContext, useContext, useState } from 'react';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [userResponses, setUserResponses] = useState({});
 
-  const login = (userData) => {
-    setUser(userData);
+  const updateUser = (newUserId) => {
+    setUserId(newUserId);
   };
 
-  const logout = () => {
-    setUser(null);
+  const updateUserResponses = (questionNumber, response) => {
+    setUserResponses((prevResponses) => ({
+      ...prevResponses,
+      [questionNumber]: response,
+    }));
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ userId, updateUser, userResponses, updateUserResponses }}>
       {children}
     </UserContext.Provider>
   );
 };
 
 export const useUser = () => {
-  return useContext(UserContext);
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('Tem que usar dentro do UserProvider');
+  }
+  return context;
 };

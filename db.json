@@ -1,91 +1,37 @@
 {
   "usuarios": [
     {
-      "name": "Yanky Jhonatha Monteiro Fonte Boa",
-      "email": "yankyfonteboa@hotmail.com",
-      "id": 1
-    }
-  ],
-  "respostas": [
-    {
-      "respostas": [
-        {
-          "resposta": "A",
-          "pontuacao": 100,
-          "questao": 1
-        }
-      ],
+      "name": "",
+      "email": "",
+      "respostas": [],
       "id": 1
     },
     {
+      "name": "Yanky Jhonatha Monteiro Fonte Boa",
+      "email": "yankyboa@gmail.com",
       "respostas": [
         {
+          "questao": 1,
+          "resposta": "A",
+          "pontuacao": 100
+        },
+        {
+          "questao": 2,
           "resposta": "B",
-          "pontuacao": 0,
-          "questao": 2
+          "pontuacao": 0
+        },
+        {
+          "questao": 3,
+          "resposta": "B",
+          "pontuacao": 0
+        },
+        {
+          "questao": 4,
+          "resposta": "A",
+          "pontuacao": 100
         }
       ],
       "id": 2
-    },
-    {
-      "respostas": [
-        {
-          "resposta": "D",
-          "pontuacao": 0,
-          "questao": 3
-        }
-      ],
-      "id": 3
-    },
-    {
-      "respostas": [
-        {
-          "resposta": "D",
-          "pontuacao": 0,
-          "questao": 3
-        }
-      ],
-      "id": 4
-    },
-    {
-      "respostas": [
-        {
-          "resposta": "",
-          "pontuacao": 0,
-          "questao": 1
-        }
-      ],
-      "id": 5
-    },
-    {
-      "respostas": [
-        {
-          "resposta": "",
-          "pontuacao": 0,
-          "questao": 2
-        }
-      ],
-      "id": 6
-    },
-    {
-      "respostas": [
-        {
-          "resposta": "",
-          "pontuacao": 0,
-          "questao": 3
-        }
-      ],
-      "id": 7
-    },
-    {
-      "respostas": [
-        {
-          "resposta": "",
-          "pontuacao": 0,
-          "questao": 3
-        }
-      ],
-      "id": 8
     }
   ]
 }

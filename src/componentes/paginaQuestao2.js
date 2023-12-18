@@ -1,59 +1,154 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdHome } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../estilos/styles.css';
 import { useUser } from './userContext';
 import {  BlockMath } from 'react-katex';
 
+
 const PaginaQuestao2 = () => {
-    const navigate = useNavigate();
-    const { userId } = useUser(); 
-  
-    const [respostaSelecionada, setRespostaSelecionada] = useState('');
-    const [pontuacao, setPontuacao] = useState(0);
-    const [respostaCorreta] = useState('A');
-    const [respostaSalva, setRespostaSalva] = useState('');
+  const navigate = useNavigate();
+  const [respostaSelecionada, setRespostaSelecionada] = useState('');
+  const [pontuacao, setPontuacao] = useState(0);
+  const [respostaCorreta] = useState('A'); //resposta correta é a A (1)
+  const [respostaSalva, setRespostaSalva] = useState('');
+  const location = useLocation();
+  const userId = location.state?.userId;
+  const [locationKey, setLocationKey] = useState(0);
+  console.log('ID do usuário na página de questão 2:', userId);
+   
+  useEffect(() => {
+    const checkUserId = async () => {
+      try {
+        console.log('Tentando verificar usuário com ID:', userId);
+
+      if (userId) {
+        try {
+          const response = await axios.get(`http://localhost:4000/usuarios/${userId}`);
+          console.log('Resposta da verificação do usuário:', response.data);
+          const existingUser = response.data;
+
+          if (!existingUser) {
+            console.log('Usuário não encontrado. Redirecionando para a página de login.');
+            navigate('/');
+          }
+        } catch (error) {
+          console.error('Erro ao verificar usuário:', error);
+        }
+      } else {
+        console.log('ID do usuário não definido. Redirecionando para a página de login.');
+        navigate('/');
+      }
+            } catch (error) {
+              console.error('Erro ao verificar usuário:', error);
+            }
+          };
+        
+          checkUserId();
+        }, [userId, navigate]);
+    
   
     const handleSelecionarResposta = (opcao) => {
       setRespostaSelecionada(opcao);
     };
   
     const handleSalvarResposta = async () => {
-        try {
-          //calcula pontuação
-          const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 100 : 0;
-          setPontuacao(pontuacaoAtual);
+      try {
+        //calcula a pontuação
+        const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 100 : 0;
+        setPontuacao(pontuacaoAtual);
     
-          //obtém as respostas do banco de dados
-          const response = await axios.get('http://localhost:4000/respostas');
-          const respostas = response.data.respostas || [];
+        //obtém as respostas do banco de dados
+        const response = await axios.get(`http://localhost:4000/usuarios/${userId}`);
+        const usuarioExistente = response.data;
     
-          //adiciona a nova resposta ao array de respostas
-          respostas.push({
-            resposta: respostaSelecionada,
-            pontuacao: pontuacaoAtual,
-            questao: 2,
+        if (usuarioExistente) {
+          //verifica se o usuário já respondeu a esta pergunta
+          const indiceRespostaExistente = usuarioExistente.respostas.findIndex(
+            (resposta) => resposta.questao === 2
+          );
+    
+          if (indiceRespostaExistente !== -1) {
+            //atualiza a resposta existente
+            usuarioExistente.respostas[indiceRespostaExistente] = {
+              questao: 2,
+              resposta: respostaSelecionada,
+              pontuacao: pontuacaoAtual,
+            };
+          } else {
+            //adiciona uma nova resposta
+            usuarioExistente.respostas.push({
+              questao: 2,
+              resposta: respostaSelecionada,
+              pontuacao: pontuacaoAtual,
+            });
+          }
+    
+          //atualiza o banco de dados com as respostas novas/atualizadas
+          await axios.patch(`http://localhost:4000/usuarios/${userId}`, {
+            respostas: usuarioExistente.respostas,
           });
-    
-          //atualiza o banco de dados com as novas respostas
-          await axios.post('http://localhost:4000/respostas', { respostas });
     
           //salva a resposta no estado local
           setRespostaSalva(respostaSelecionada);
     
-          //use navigate para ir para a próxima questão
-          
-          navigate('/questao3');
-        } catch (error) {
-          console.error('Erro ao salvar resposta:', error);
+          //navega para a próxima questão, passando o id do usuário junto.
+          navigate('/questao3', { state: { userId } });
         }
-      };
+      } catch (error) {
+        console.error('Erro ao salvar resposta:', error);
+      }
+    };
 
-  const handleRevisarDepois = () => {
-    //dps adicionar
-    alert('Revisar Depois');
-  };
+    const handleRevisarDepois = async () => {
+      try {
+        //verificar se o ID do usuário está definido
+        if (!userId) {
+          console.log('ID do usuário não definido. Redirecionando para a página de login.');
+          navigate('/');
+          return;
+        }
+    
+        //obter dados do usuário do banco de dados
+        const response = await axios.get(`http://localhost:4000/usuarios/${userId}`);
+        const usuarioExistente = response.data;
+    
+        //verificar se o usuário existe
+        if (usuarioExistente) {
+          //verificar se o usuário já respondeu à pergunta atual
+          const indiceRespostaExistente = usuarioExistente.respostas.findIndex(
+            (resposta) => resposta.questao === 2
+          );
+    
+          if (indiceRespostaExistente === -1) {
+            //se o usuário ainda não respondeu à pergunta, adicionar uma nova resposta
+            usuarioExistente.respostas.push({
+              questao: 2,
+              resposta: '', //string vazia, pois está marcada para revisão posterior
+              pontuacao: 0,
+            });
+    
+            //atualizar o banco de dados com a nova resposta
+            await axios.patch(`http://localhost:4000/usuarios/${userId}`, {
+              respostas: usuarioExistente.respostas,
+            });
+    
+            //navegar para a próxima pergunta
+            navigate('/questao3', { state: { userId } });
+            setLocationKey((prevKey) => prevKey + 1);
+          } else {
+            //se o usuário já respondeu à pergunta, simplesmente navegar para a próxima pergunta
+            alert('Resposta marcada como branca, pulando para próxima questão...');
+            setRespostaSelecionada('');
+            navigate('/questao3', { state: { userId } });
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao revisar depois:', error);
+      }
+    };
 
   const TabelaQuestao2 = () => {
     const disciplinas = ['Matemática', 'Português', 'Geografia', 'História'];

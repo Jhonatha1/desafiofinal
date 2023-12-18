@@ -140,8 +140,90 @@ body {
   .opcoes-lista ul{
     justify-content: center;
   }
+  .gabarito-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+    color: black;
+    text-align: center;
+    font-size: larger;
+    margin: 0 auto;
+  }
+  
+  .gabarito-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: black;
+    text-align: center;
+    font-size: larger;
+    margin: 0 auto;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
+  .gabarito-container {
+    margin-top: 10px;
+    justify-content: center;
+    text-align: center;
+    font: 20px Arial, sans-serif;
+  }
   
+  .gabarito-table {
+    border-collapse: collapse;
+    width: 50%;
+    margin: 0 auto;
+    
+  }
   
+  .gabarito-table th, .gabarito-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .gabarito-table th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .gabarito-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .gabarito-table tr:hover {
+    background-color: #ddd;
+  }
+  
+  .botao-salvar-respostas {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .botao-salvar-respostas button {
+    width: 25%;
+    padding: 10px;
+    background-color: grey;
+    color: #fff;
+    border-radius: 5px; 
+    box-sizing: border-box;
+    margin-left: 5px;
+    margin-top: 20px;
+  }
+
+  .botao-salvar-respostas button:hover {
+        background-color: #434444;
+  }
   
  

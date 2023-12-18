@@ -181,7 +181,7 @@ body {
   
   .gabarito-table {
     border-collapse: collapse;
-    width: 50%;
+    width: 80%;
     margin: 0 auto;
     
   }
@@ -214,8 +214,8 @@ body {
   .botao-salvar-respostas button {
     width: 25%;
     padding: 10px;
-    background-color: grey;
-    color: #fff;
+    background-color: rgb(0, 204, 255);
+    color: black;
     border-radius: 5px; 
     box-sizing: border-box;
     margin-left: 5px;
@@ -223,7 +223,77 @@ body {
   }
 
   .botao-salvar-respostas button:hover {
-        background-color: #434444;
+        background-color: #0273a0;
   }
   
- 
+  .botao-revisar-respostas button{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    background-color: rgb(0, 204, 255);
+    border-radius: 10px;
+  }
+  
+  .botao-revisar-respostas button:hover {
+    background-color: #0273a0;
+}
+
+.ranking-table {
+  border-collapse: collapse;
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.ranking-table th, .ranking-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.ranking-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.ranking-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.ranking-table tr:hover {
+  background-color: #ddd;
+}
+.botao-voltar {
+  width: 25%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px; 
+  box-sizing: border-box;
+  margin-left: 5px;
+  cursor: pointer;
+  
+}
+
+.botao-voltar:hover {
+  background-color: #0056b3;
+}
+
+.ranking-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: black;
+  text-align: center;
+  font-size: larger;
+  margin: 0 auto;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.ranking-container {
+  margin-top: 10px;
+  justify-content: center;
+  text-align: center;
+  font: 20px Arial, sans-serif;
+}

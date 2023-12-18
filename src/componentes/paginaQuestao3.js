@@ -15,7 +15,7 @@ const PaginaQuestao3 = () => {
   const navigate = useNavigate();
   const [respostaSelecionada, setRespostaSelecionada] = useState('');
   const [pontuacao, setPontuacao] = useState(0);
-  const [respostaCorreta] = useState('A'); //resposta correta é a A (1)
+  const [respostaCorreta] = useState('C'); //resposta correta é a A (1)
   const [respostaSalva, setRespostaSalva] = useState('');
   const location = useLocation();
   const userId = location.state?.userId;

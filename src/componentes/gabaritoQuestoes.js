@@ -3,13 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../estilos/styles.css';
 import { useLocation, Link } from 'react-router-dom';
-
+import Ranking from './rankingGlobal';  
 
 const Gabarito = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const userId = location.state?.userId;
   const [userAnswers, setUserAnswers] = useState(null);
+  const [rankingData, setRankingData] = useState([]);
+  const API_URL = 'http://localhost:4000';
+  const respostasCorretas = ['A', 'B', 'C', 'D'];
 
   useEffect(() => {
     const checkUserId = async () => {
@@ -51,8 +54,72 @@ const Gabarito = () => {
     navigate(linkDaQuestao, { state: { userId } });
   };
 
-  const handleSalvarRespostas = () => {
-      navigate('/ranking', { state: { userId } });
+  const handleSalvarRespostas = async () => {
+    try {
+      const pontuacao = calcularPontuacao();
+  
+      if (userAnswers && userAnswers.length > 0) {
+        const response = await axios.get(`${API_URL}/usuarios/${userId}`);
+        const existingUser = response.data;
+  
+        if (existingUser && existingUser.id) {
+          //atualizar apenas as propriedades necessárias
+          const updatedUser = {
+            ...existingUser,
+            respostas: userAnswers,
+            pontuacao,
+          };
+  
+          //fazer uma requisição PUT para atualizar os dados no backend
+          await axios.put(`${API_URL}/usuarios/${userId}`, updatedUser);
+  
+          const responseUsuarios = await axios.get(`${API_URL}/usuarios`);
+          const usuarios = responseUsuarios.data;
+  
+          //atualizar o usuário específico
+          const updatedUsers = usuarios.map(user =>
+            user.id === updatedUser.id ? updatedUser : user
+          );
+  
+          //adicionar dados ao estado local de rankingData
+          const rankingData = updatedUsers.map(user => ({
+            userId: user.id,
+            name: user.name || '',
+            pontuacao: user.pontuacao || 0,
+          }));
+  
+          //ordenar dados por pontuação em ordem decrescente
+          rankingData.sort((a, b) => b.pontuacao - a.pontuacao);
+  
+          setRankingData(rankingData);
+  
+          //navegar para a página /ranking
+          navigate('/ranking', { state: { userId } });
+        } else {
+          console.error('Usuário não encontrado.');
+        }
+      } else {
+        console.error('Nenhuma resposta encontrada para o usuário.');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar respostas:', error);
+    }
+  };
+  
+
+  const calcularPontuacao = () => {
+    if (userAnswers) {
+      return userAnswers.reduce((pontuacao, answer) => {
+        //verifica se a resposta do usuário está correta
+        const respostaCorreta = respostasCorretas[answer.questao - 1];
+        if (answer.resposta === respostaCorreta) {
+          //adiciona 100 pontos por cada resposta correta
+          pontuacao += 100;
+        }
+        return pontuacao;
+      }, 0);
+    }
+    return 0;
   };
 
   return (
@@ -87,9 +154,11 @@ const Gabarito = () => {
                   <td>{answer.resposta ? 'Respondido' : 'Sem resposta'}</td>
                   <td>{/* Tempo  */}</td>
                   <td>
+                    <div className='botao-revisar-respostas'>
                     <button onClick={() => handleMudarResposta(answer.questao)}>
                       Mudar Resposta
                     </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -103,6 +172,7 @@ const Gabarito = () => {
             <button onClick={handleSalvarRespostas}>Salvar Respostas</button>
           </div>
       </div>
+
     </div>
   );
 };

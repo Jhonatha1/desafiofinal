@@ -4,21 +4,21 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
-  const [userResponses, setUserResponses] = useState({});
+  const [userRespostas, setUserRespostas] = useState({});
 
   const updateUser = (newUserId) => {
     setUserId(newUserId);
   };
 
-  const updateUserResponses = (questionNumber, response) => {
-    setUserResponses((prevResponses) => ({
-      ...prevResponses,
-      [questionNumber]: response,
+  const updateUserRespostas = (questaoNumero, resposta) => {
+    setUserRespostas((prevrespostas) => ({
+      ...prevrespostas,
+      [questaoNumero]: resposta,
     }));
   };
 
   return (
-    <UserContext.Provider value={{ userId, updateUser, userResponses, updateUserResponses }}>
+    <UserContext.Provider value={{ userId, updateUser, userRespostas, updateUserRespostas }}>
       {children}
     </UserContext.Provider>
   );

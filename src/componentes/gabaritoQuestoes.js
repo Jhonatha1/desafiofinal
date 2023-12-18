@@ -5,6 +5,8 @@ import '../estilos/styles.css';
 import { useLocation, Link } from 'react-router-dom';
 import Ranking from './rankingGlobal';  
 
+
+
 const Gabarito = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,30 +15,34 @@ const Gabarito = () => {
   const [rankingData, setRankingData] = useState([]);
   const API_URL = 'http://localhost:4000';
   const respostasCorretas = ['A', 'B', 'C', 'D'];
+  const tempoRestanteInicial = location.state?.tempoRestante || 0;
+  const [tempoRestante, setTempoRestante] = useState(tempoRestanteInicial);
+  const tempoTotal = 2 * 60 * 60 + 40 * 60; //2 horas e 40 minutos em segundos
+
 
   useEffect(() => {
     const checkUserId = async () => {
       try {
-        console.log('Tentando verificar usuário com ID:', userId);
+        //console.log('Tentando verificar usuário com ID:', userId);
 
         if (userId) {
           try {
             const response = await axios.get(`http://localhost:4000/usuarios/${userId}`);
-            console.log('Resposta da verificação do usuário:', response.data);
+           //console.log('Resposta da verificação do usuário:', response.data);
             const existingUser = response.data;
 
             if (!existingUser) {
-              console.log('Usuário não encontrado. Redirecionando para a página de login.');
+             //console.log('Usuário não encontrado. Redirecionando para a página de login.');
               navigate('/');
             } else {
-              console.log('Respostas do usuário:', existingUser.respostas);
+             //console.log('Respostas do usuário:', existingUser.respostas);
               setUserAnswers(existingUser.respostas);
             }
           } catch (error) {
             console.error('Erro ao verificar usuário:', error);
           }
         } else {
-          console.log('ID do usuário não definido. Redirecionando para a página de login.');
+          //console.log('ID do usuário não definido. Redirecionando para a página de login.');
           navigate('/');
         }
       } catch (error) {
@@ -47,11 +53,18 @@ const Gabarito = () => {
     checkUserId();
   }, [userId, navigate]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTempoRestante((prevTempo) => (prevTempo > 0 ? prevTempo - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [tempoRestante]);
+
   const handleMudarResposta = (questao) => {
     //use o Link para navegar para a questão específica
     const linkDaQuestao = `/questao${questao}`;
     //navegue usando o Link e passando o userId como state
-    navigate(linkDaQuestao, { state: { userId } });
+    navigate(linkDaQuestao, { state: { userId} });
   };
 
   const handleSalvarRespostas = async () => {
@@ -68,6 +81,7 @@ const Gabarito = () => {
             ...existingUser,
             respostas: userAnswers,
             pontuacao,
+            tempo: tempoTotal - tempoRestanteInicial,
           };
   
           //fazer uma requisição PUT para atualizar os dados no backend
@@ -86,6 +100,8 @@ const Gabarito = () => {
             userId: user.id,
             name: user.name || '',
             pontuacao: user.pontuacao || 0,
+            tempo: user.tempo || 0,
+
           }));
   
           //ordenar dados por pontuação em ordem decrescente
@@ -94,7 +110,9 @@ const Gabarito = () => {
           setRankingData(rankingData);
   
           //navegar para a página /ranking
-          navigate('/ranking', { state: { userId } });
+          alert ('Respostas salvas com sucesso!');
+          navigate('/ranking', { state: { userId, tempoRestante: tempoRestante - 1 } });
+
         } else {
           console.error('Usuário não encontrado.');
         }
@@ -114,7 +132,7 @@ const Gabarito = () => {
         const respostaCorreta = respostasCorretas[answer.questao - 1];
         if (answer.resposta === respostaCorreta) {
           //adiciona 100 pontos por cada resposta correta
-          pontuacao += 100;
+          pontuacao += 105.8;
         }
         return pontuacao;
       }, 0);
@@ -122,9 +140,18 @@ const Gabarito = () => {
     return 0;
   };
 
+  const formatarTempo = (segundos) => {
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segundosRestantes = segundos % 60;
+
+    return `${horas}h ${minutos}m ${segundosRestantes}s`;
+  };
+
   return (
     <div className='gabarito-header'>
       <h1>Gabarito</h1>
+      <span>Tempo restante: {formatarTempo(tempoRestante)}</span>
 
       <div className='gabarito-container'>
         {userAnswers && userAnswers.length > 0 ? (
@@ -135,7 +162,6 @@ const Gabarito = () => {
                 <th>Resposta</th>
                 <th>Prova</th>
                 <th>Status</th>
-                <th>Tempo</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -152,7 +178,7 @@ const Gabarito = () => {
                       : 'N/A'}
                   </td>
                   <td>{answer.resposta ? 'Respondido' : 'Sem resposta'}</td>
-                  <td>{/* Tempo  */}</td>
+                  
                   <td>
                     <div className='botao-revisar-respostas'>
                     <button onClick={() => handleMudarResposta(answer.questao)}>

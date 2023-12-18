@@ -8,7 +8,7 @@ import { useUser } from './userContext';
 import { IoMdMale } from "react-icons/io";
 import { IoMdFemale } from "react-icons/io";
 import { FaSquareFull } from "react-icons/fa6";
-
+import { IoLogOutOutline } from 'react-icons/io5';
 
 
 const PaginaQuestao3 = () => {
@@ -20,29 +20,32 @@ const PaginaQuestao3 = () => {
   const location = useLocation();
   const userId = location.state?.userId;
   const [locationKey, setLocationKey] = useState(0);
-  console.log('ID do usuário na página de questão 3:', userId);
+  const tempoRestanteInicial = location.state?.tempoRestante || 0;
+  const [tempoRestante, setTempoRestante] = useState(tempoRestanteInicial);
+
+  //console.log('ID do usuário na página de questão 3:', userId);
   
 
   useEffect(() => {
     const checkUserId = async () => {
       try {
-        console.log('Tentando verificar usuário com ID:', userId);
+        //console.log('Tentando verificar usuário com ID:', userId);
 
       if (userId) {
         try {
           const response = await axios.get(`http://localhost:4000/usuarios/${userId}`);
-          console.log('Resposta da verificação do usuário:', response.data);
+          //console.log('Resposta da verificação do usuário:', response.data);
           const existingUser = response.data;
 
           if (!existingUser) {
-            console.log('Usuário não encontrado. Redirecionando para a página de login.');
+            //console.log('Usuário não encontrado. Redirecionando para a página de login.');
             navigate('/');
           }
         } catch (error) {
           console.error('Erro ao verificar usuário:', error);
         }
       } else {
-        console.log('ID do usuário não definido. Redirecionando para a página de login.');
+        //console.log('ID do usuário não definido. Redirecionando para a página de login.');
         navigate('/');
       }
             } catch (error) {
@@ -53,6 +56,15 @@ const PaginaQuestao3 = () => {
           checkUserId();
         }, [userId, navigate]);
 
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setTempoRestante((prevTempo) => (prevTempo > 0 ? prevTempo - 1 : 0));
+          }, 1000);
+      
+          return () => clearInterval(interval);
+        }, [tempoRestante]);
+      
+
     const handleSelecionarResposta = (opcao) => {
       setRespostaSelecionada(opcao);
     };
@@ -60,7 +72,7 @@ const PaginaQuestao3 = () => {
     const handleSalvarResposta = async () => {
       try {
         //calcula a pontuação
-        const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 100 : 0;
+        const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 105.8 : 0;
         setPontuacao(pontuacaoAtual);
     
         //obtém as respostas do banco de dados
@@ -98,7 +110,7 @@ const PaginaQuestao3 = () => {
           setRespostaSalva(respostaSelecionada);
     
           //navega para a próxima questão, passando o id do usuário junto.
-          navigate('/questao4', { state: { userId } });
+          navigate('/questao4', { state: { userId, tempoRestante: tempoRestante - 1 } });
         }
       } catch (error) {
         console.error('Erro ao salvar resposta:', error);
@@ -109,7 +121,7 @@ const PaginaQuestao3 = () => {
       try {
         //verificar se o ID do usuário está definido
         if (!userId) {
-          console.log('ID do usuário não definido. Redirecionando para a página de login.');
+          //console.log('ID do usuário não definido. Redirecionando para a página de login.');
           navigate('/');
           return;
         }
@@ -139,13 +151,13 @@ const PaginaQuestao3 = () => {
             });
     
             //navegar para a próxima pergunta
-            navigate('/questao4', { state: { userId } });
+            navigate('/questao4', { state: { userId ,  } });
             setLocationKey((prevKey) => prevKey + 1);
           } else {
             //se o usuário já respondeu à pergunta, simplesmente navegar para a próxima pergunta
             alert('Resposta marcada como branca, pulando para próxima questão...');
             setRespostaSelecionada('');
-            navigate('/questao4', { state: { userId } });
+            navigate('/questao4', { state: { userId, tempoRestante: tempoRestante - 1 } });
           }
         }
       } catch (error) {
@@ -237,7 +249,13 @@ const PaginaQuestao3 = () => {
     );
   };
 
+  const formatarTempo = (segundos) => {
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segundosRestantes = segundos % 60;
   
+    return `${horas}h ${minutos}m ${segundosRestantes}s`;
+  };
   
   return (
     <div className='page-container'>
@@ -250,8 +268,8 @@ const PaginaQuestao3 = () => {
           </div>
           <div className='header-right'>
             <span>Prova: Ciências da Natureza e suas tecnologias </span>
-            <span>Tempo: 1m.20s</span>
           </div>
+          <span>Tempo restante: {formatarTempo(tempoRestante)}</span>
         </header>
 
         
@@ -260,24 +278,27 @@ const PaginaQuestao3 = () => {
           Um pesquisador observou, em uma árvore, um ninho de uma espécie de falcão. Apenas um filhote apresentava uma coloração típica de penas de ambos os pais. Foram coletadas amostras de DNA dos pais e filhotes para caracterização genética dos alelos responsáveis pela coloração das penas. O perfil de bandas obtido para cada indivíduo do ninho para os lócus 1 e 2, onde se localizam os genes dessa característica, está representado na figura.
           </p>
           <h5><b><center>Padrões de bandas em gel das moléculas de DNA dos indivíduos</center></b></h5>
+          
+          <center><h6>   ⠀⠀⠀⠀⠀⠀ Pais⠀⠀⠀⠀⠀⠀Filhotes</h6></center>
         </div>
        <div className='tabela-container-questao3'>
         <TabelaQuestao3 />
         </div>
-        <br></br><br></br>
+        <center><h6>   ⠀⠀⠀⠀⠀⠀ Pais⠀⠀⠀⠀⠀⠀Filhotes</h6></center>
+        
         <div className='tabela-container-questao3'>
         <TabelaDoisQuestao3 />
         </div>
 
         <div className='opcoes-container'>
         <h6>Dos filhotes, qual apresenta a coloração típica de penas dos pais?</h6>
+        </div>
 
         <div className="opcoes-lista">
-          <ul>
-          <br></br>
-          <br></br>
+          <ul>          
           <li>
             <label>
+            A
               <input
                 type="radio"
                 name="opcao"
@@ -285,11 +306,13 @@ const PaginaQuestao3 = () => {
                 checked={respostaSelecionada === 'A'}
                 onChange={() => handleSelecionarResposta('A')}
               />
-A            </label>
+            </label>
+            1
           </li>
           
           <li>
             <label>
+            B 
               <input
                 type="radio"
                 name="opcao"
@@ -297,11 +320,13 @@ A            </label>
                 checked={respostaSelecionada === 'B'}
                 onChange={() => handleSelecionarResposta('B')}
               />
-B            </label>
+           </label>
+           2
           </li>
           
           <li>
             <label>
+            C
               <input
                 type="radio"
                 name="opcao"
@@ -309,12 +334,14 @@ B            </label>
                 checked={respostaSelecionada === 'C'}
                 onChange={() => handleSelecionarResposta('C')}
               />
-C
+
             </label>
+            3
           </li>
           
           <li>
             <label>
+            D
               <input
                 type="radio"
                 name="opcao"
@@ -322,18 +349,25 @@ C
                 checked={respostaSelecionada === 'D'}
                 onChange={() => handleSelecionarResposta('D')}
               />
-D
+
             </label>
+            4
           </li>
-          
+         
         </ul>
-        </div>
+        
         
       </div>
       <div className='botoes-container'>
           <button onClick={handleRevisarDepois}>Revisar Depois</button>
           <button onClick={handleSalvarResposta}>Salvar</button>
         </div>
+        <button
+          onClick={() => navigate('/')}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px'}}
+        >
+          Sair <IoLogOutOutline />
+        </button>
     </div>
   );
 };

@@ -7,11 +7,12 @@ import '../estilos/styles.css';
 import 'katex/dist/katex.min.css';
 import {  BlockMath } from 'react-katex';
 import Gabarito from './gabaritoQuestoes';
+import { IoLogOutOutline } from "react-icons/io5";
+
 
 
 const PaginaQuestao1 = () => {
   const navigate = useNavigate();
-  
   const [respostaSelecionada, setRespostaSelecionada] = useState('');
   const [pontuacao, setPontuacao] = useState(0);
   const [respostaCorreta] = useState('A'); //resposta correta é a A (1)
@@ -19,8 +20,9 @@ const PaginaQuestao1 = () => {
   const location = useLocation();
   const userId = location.state?.userId;
   const [locationKey, setLocationKey] = useState(0);
-  
-  console.log('ID do usuário na página de questão 1:', userId);
+  const [tempoRestante, setTempoRestante] = useState(160 * 60); //2 horas e 40 minutos em segundos
+
+  //console.log('ID do usuário na página de questão 1:', userId);
 
 
 
@@ -39,23 +41,23 @@ const PaginaQuestao1 = () => {
   useEffect(() => {
     const checkUserId = async () => {
       try {
-        console.log('Tentando verificar usuário com ID:', userId);
+        //console.log('Tentando verificar usuário com ID:', userId);
 
       if (userId) {
         try {
           const response = await axios.get(`http://localhost:4000/usuarios/${userId}`);
-          console.log('Resposta da verificação do usuário:', response.data);
+          //console.log('Resposta da verificação do usuário:', response.data);
           const existingUser = response.data;
 
           if (!existingUser) {
-            console.log('Usuário não encontrado. Redirecionando para a página de login.');
+            //console.log('Usuário não encontrado. Redirecionando para a página de login.');
             navigate('/');
           }
         } catch (error) {
           console.error('Erro ao verificar usuário:', error);
         }
       } else {
-        console.log('ID do usuário não definido. Redirecionando para a página de login.');
+        //console.log('ID do usuário não definido. Redirecionando para a página de login.');
         navigate('/');
       }
             } catch (error) {
@@ -66,8 +68,13 @@ const PaginaQuestao1 = () => {
           checkUserId();
         }, [userId, navigate]);
     
-  
-  
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setTempoRestante((prevTempo) => (prevTempo > 0 ? prevTempo - 1 : 0));
+          }, 1000);
+      
+          return () => clearInterval(interval);
+        }, []);
 
   const handleSelecionarResposta = (opcao) => {
     setRespostaSelecionada(opcao);
@@ -76,7 +83,7 @@ const PaginaQuestao1 = () => {
   const handleSalvarResposta = async () => {
     try {
       //calcula a pontuação
-      const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 100 : 0;
+      const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 105.8 : 0;
       setPontuacao(pontuacaoAtual);
   
       //obtém as respostas do banco de dados
@@ -114,7 +121,7 @@ const PaginaQuestao1 = () => {
         setRespostaSalva(respostaSelecionada);
   
         //navega para a próxima questão, passando o ID do usuário junto.
-        navigate('/questao2', { state: { userId } });
+        navigate('/questao2', { state: { userId, tempoRestante: tempoRestante - 1 } });
         setLocationKey((prevKey) => prevKey + 1);
       } 
     } catch (error) {
@@ -126,7 +133,7 @@ const PaginaQuestao1 = () => {
     try {
       //verificar se o ID do usuário está definido
       if (!userId) {
-        console.log('ID do usuário não definido. Redirecionando para a página de login.');
+        //console.log('ID do usuário não definido. Redirecionando para a página de login.');
         navigate('/');
         return;
       }
@@ -169,6 +176,14 @@ const PaginaQuestao1 = () => {
       console.error('Erro ao revisar depois:', error);
     }
   };
+
+  const formatarTempo = (segundos) => {
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segundosRestantes = segundos % 60;
+  
+    return `${horas}h ${minutos}m ${segundosRestantes}s`;
+  };
   
 
   return (
@@ -179,15 +194,15 @@ const PaginaQuestao1 = () => {
             <IoMdHome size={24} />
           </Link>
           <h1>Questão 1</h1>
-          </div>
-          <div className='header-right'>
-            <span>Prova: Matemática e suas tecnologias </span>
-            <span>Tempo: 1m.20s</span>
-          </div>
-        </header>
+        </div>
+        <div className='header-right'>
+          <span>Prova: Matemática e suas tecnologias</span>
+        </div>
+        <span>Tempo restante: {formatarTempo(tempoRestante)}</span>
+      </header>
 
         
-        <div className='questao-content'>
+        <div>
           <p>
           A Transferência Eletrônica Disponível (TED) é uma transação financeira de valores entre diferentes bancos. Um economista decide analisar os valores enviados por meio de TEDs entre cinco bancos (1,2, 3, 4 e 5) durante um mês. Para isso, ele dispõe esses valores em uma matriz A = [aij], em que 1 ≤ 5 e 1 ≤ j ≤ 5, e o elemento aij corresponde ao total proveniente das operações feitas via TED, em milhão de real, transferidos do banco i para o banco j durante o mês. Observe que os elementos aij = 0, uma vez que TED é uma transferência entre bancos distintos. Esta é a matriz obtida para essa análise:
           </p>
@@ -199,8 +214,9 @@ const PaginaQuestao1 = () => {
 
         <div className='opcoes-container'>
         <h6>Com base nessas informações, o banco que transferiu a maior quantia via TED é o banco:</h6>
-        
-        <div className="opcoes-lista">
+        </div>
+
+        <div className="opcoes-lista opcoes-esquerda">
           <ul>
           <br></br>
           <br></br>
@@ -258,11 +274,18 @@ const PaginaQuestao1 = () => {
           </ul>
         </div>
         
-      </div>
+      
       <div className='botoes-container'>
           <button onClick={handleRevisarDepois}>Revisar Depois</button>
           <button onClick={handleSalvarResposta}>Salvar</button>
+          
         </div>
+        <button
+          onClick={() => navigate('/')}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px'}}
+        >
+          Sair <IoLogOutOutline />
+        </button>
         
     </div>
   );

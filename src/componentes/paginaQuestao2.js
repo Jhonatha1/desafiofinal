@@ -6,7 +6,7 @@ import axios from 'axios';
 import '../estilos/styles.css';
 import { useUser } from './userContext';
 import {  BlockMath } from 'react-katex';
-
+import { IoLogOutOutline } from 'react-icons/io5';
 
 const PaginaQuestao2 = () => {
   const navigate = useNavigate();
@@ -17,28 +17,29 @@ const PaginaQuestao2 = () => {
   const location = useLocation();
   const userId = location.state?.userId;
   const [locationKey, setLocationKey] = useState(0);
-  console.log('ID do usuário na página de questão 2:', userId);
+  const tempoRestanteInicial = location.state?.tempoRestante || 0;
+  const [tempoRestante, setTempoRestante] = useState(tempoRestanteInicial);
    
   useEffect(() => {
     const checkUserId = async () => {
       try {
-        console.log('Tentando verificar usuário com ID:', userId);
+        //console.log('Tentando verificar usuário com ID:', userId);
 
       if (userId) {
         try {
           const response = await axios.get(`http://localhost:4000/usuarios/${userId}`);
-          console.log('Resposta da verificação do usuário:', response.data);
+          //console.log('Resposta da verificação do usuário:', response.data);
           const existingUser = response.data;
 
           if (!existingUser) {
-            console.log('Usuário não encontrado. Redirecionando para a página de login.');
+            //console.log('Usuário não encontrado. Redirecionando para a página de login.');
             navigate('/');
           }
         } catch (error) {
           console.error('Erro ao verificar usuário:', error);
         }
       } else {
-        console.log('ID do usuário não definido. Redirecionando para a página de login.');
+        //console.log('ID do usuário não definido. Redirecionando para a página de login.');
         navigate('/');
       }
             } catch (error) {
@@ -48,6 +49,14 @@ const PaginaQuestao2 = () => {
         
           checkUserId();
         }, [userId, navigate]);
+
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setTempoRestante((prevTempo) => (prevTempo > 0 ? prevTempo - 1 : 0));
+          }, 1000);
+      
+          return () => clearInterval(interval);
+        }, [tempoRestante]);
     
   
     const handleSelecionarResposta = (opcao) => {
@@ -57,7 +66,7 @@ const PaginaQuestao2 = () => {
     const handleSalvarResposta = async () => {
       try {
         //calcula a pontuação
-        const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 100 : 0;
+        const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 105.8 : 0;
         setPontuacao(pontuacaoAtual);
     
         //obtém as respostas do banco de dados
@@ -95,7 +104,7 @@ const PaginaQuestao2 = () => {
           setRespostaSalva(respostaSelecionada);
     
           //navega para a próxima questão, passando o id do usuário junto.
-          navigate('/questao3', { state: { userId } });
+          navigate('/questao3', { state: { userId, tempoRestante: tempoRestante - 1 } });
         }
       } catch (error) {
         console.error('Erro ao salvar resposta:', error);
@@ -106,7 +115,7 @@ const PaginaQuestao2 = () => {
       try {
         //verificar se o ID do usuário está definido
         if (!userId) {
-          console.log('ID do usuário não definido. Redirecionando para a página de login.');
+          //console.log('ID do usuário não definido. Redirecionando para a página de login.');
           navigate('/');
           return;
         }
@@ -246,6 +255,14 @@ const PaginaQuestao2 = () => {
       </div>
     );
   };
+
+  const formatarTempo = (segundos) => {
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segundosRestantes = segundos % 60;
+  
+    return `${horas}h ${minutos}m ${segundosRestantes}s`;
+  };
   
   return (
     <div className='page-container'>
@@ -258,8 +275,8 @@ const PaginaQuestao2 = () => {
           </div>
           <div className='header-right'>
             <span>Prova: Matemática e suas tecnologias </span>
-            <span>Tempo: 1m.20s</span>
           </div>
+          <span>Tempo restante: {formatarTempo(tempoRestante)}</span>
         </header>
 
         
@@ -273,87 +290,92 @@ const PaginaQuestao2 = () => {
         </div>
 
         <div className='opcoes-container'>
-        <h6>Para obter essas médias, ele multiplicou a matriz obtida a partir da tabela por</h6>
-
-        <div className="opcoes-lista">
-          <ul>
-          <br></br>
-          <br></br>
-          <li>
-            <label>
-              <input
-                type="radio"
-                name="opcao"
-                value="A"
-                checked={respostaSelecionada === 'A'}
-                onChange={() => handleSelecionarResposta('A')}
-              />
-              A <MatrizLetraA />
-            </label>
-          </li>
-          <br></br>
-          <li>
-            <label>
-              <input
-                type="radio"
-                name="opcao"
-                value="B"
-                checked={respostaSelecionada === 'B'}
-                onChange={() => handleSelecionarResposta('B')}
-              />
-              B <MatrizLetraB />
-            </label>
-          </li>
-          <br></br>
-          <li>
-            <label>
-              <input
-                type="radio"
-                name="opcao"
-                value="C"
-                checked={respostaSelecionada === 'C'}
-                onChange={() => handleSelecionarResposta('C')}
-              />
-              C <MatrizLetraC />
-
-            </label>
-          </li>
-          <li>
-            <label>
-              <input
-                type="radio"
-                name="opcao"
-                value="D"
-                checked={respostaSelecionada === 'D'}
-                onChange={() => handleSelecionarResposta('D')}
-              />
-              D <MatrizLetraD />
-
-            </label>
-          </li>
-          <li>
-            <label>
-              <input
-                type="radio"
-                name="opcao"
-                value="E"
-                checked={respostaSelecionada === 'E'}
-                onChange={() => handleSelecionarResposta('E')}
-              />
-              E <MatrizLetraE />
-
-            </label>
-          </li>
-        </ul>
-        </div>
-        
-      </div>
-      <div className='botoes-container'>
-          <button onClick={handleRevisarDepois}>Revisar Depois</button>
-          <button onClick={handleSalvarResposta}>Salvar</button>
-        </div>
+      <h6>Para obter essas médias, ele multiplicou a matriz obtida a partir da tabela por</h6>
     </div>
-  );
+
+    <div className="opcoes-lista">
+      <ul className="opcoes-esquerda">
+        {/* Opções A, B, C */}
+        <li>
+          <label>
+            <input
+              type="radio"
+              name="opcao"
+              value="A"
+              checked={respostaSelecionada === 'A'}
+              onChange={() => handleSelecionarResposta('A')}
+            />
+            A <MatrizLetraA />
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name="opcao"
+              value="B"
+              checked={respostaSelecionada === 'B'}
+              onChange={() => handleSelecionarResposta('B')}
+            />
+            B <MatrizLetraB />
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name="opcao"
+              value="C"
+              checked={respostaSelecionada === 'C'}
+              onChange={() => handleSelecionarResposta('C')}
+            />
+            C <MatrizLetraC />
+          </label>
+        </li>
+      </ul>
+
+      <ul className="opcoes-lado-direito">
+        {/* Opções D, E */}
+        <li>
+          <label>
+            <input
+              type="radio"
+              name="opcao"
+              value="D"
+              checked={respostaSelecionada === 'D'}
+              onChange={() => handleSelecionarResposta('D')}
+            />
+            D <MatrizLetraD />
+          </label>
+        </li>
+        <li>
+          <label>
+            <input
+              type="radio"
+              name="opcao"
+              value="E"
+              checked={respostaSelecionada === 'E'}
+              onChange={() => handleSelecionarResposta('E')}
+            />
+            E <MatrizLetraE />
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <div className='botoes-container'>
+      <button onClick={handleRevisarDepois}>Revisar Depois</button>
+      <button onClick={handleSalvarResposta}>Salvar</button>
+    </div>
+    <button
+          onClick={() => navigate('/')}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px'}}
+        >
+          Sair <IoLogOutOutline />
+        </button>
+  </div>
+);
+
 };
 
 

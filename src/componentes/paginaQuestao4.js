@@ -5,8 +5,7 @@ import axios from 'axios';
 import '../estilos/styles.css';
 import { useUser } from './userContext';
 import { useLocation } from 'react-router-dom';
-
-
+import { IoLogOutOutline } from 'react-icons/io5';
 
 
 const PaginaQuestao4 = () => {
@@ -18,28 +17,30 @@ const PaginaQuestao4 = () => {
   const location = useLocation();
   const userId = location.state?.userId;
   const [locationKey, setLocationKey] = useState(0);
-  console.log('ID do usuário na página de questão 3:', userId);
+  const tempoRestanteInicial = location.state?.tempoRestante || 0;
+  const [tempoRestante, setTempoRestante] = useState(tempoRestanteInicial);
+  //console.log('ID do usuário na página de questão 3:', userId);
   
   useEffect(() => {
     const checkUserId = async () => {
       try {
-        console.log('Tentando verificar usuário com ID:', userId);
+        //console.log('Tentando verificar usuário com ID:', userId);
 
       if (userId) {
         try {
           const response = await axios.get(`http://localhost:4000/usuarios/${userId}`);
-          console.log('Resposta da verificação do usuário:', response.data);
+          //console.log('Resposta da verificação do usuário:', response.data);
           const existingUser = response.data;
 
           if (!existingUser) {
-            console.log('Usuário não encontrado. Redirecionando para a página de login.');
+            //console.log('Usuário não encontrado. Redirecionando para a página de login.');
             navigate('/');
           }
         } catch (error) {
           console.error('Erro ao verificar usuário:', error);
         }
       } else {
-        console.log('ID do usuário não definido. Redirecionando para a página de login.');
+        //console.log('ID do usuário não definido. Redirecionando para a página de login.');
         navigate('/');
       }
             } catch (error) {
@@ -50,6 +51,14 @@ const PaginaQuestao4 = () => {
           checkUserId();
         }, [userId, navigate]);
 
+        useEffect(() => {
+          const interval = setInterval(() => {
+            setTempoRestante((prevTempo) => (prevTempo > 0 ? prevTempo - 1 : 0));
+          }, 1000);
+      
+          return () => clearInterval(interval);
+        }, [tempoRestante]);
+
     const handleSelecionarResposta = (opcao) => {
       setRespostaSelecionada(opcao);
     };
@@ -57,7 +66,7 @@ const PaginaQuestao4 = () => {
     const handleSalvarResposta = async () => {
       try {
         //calcula a pontuação
-        const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 100 : 0;
+        const pontuacaoAtual = respostaSelecionada === respostaCorreta ? 105.8 : 0;
         setPontuacao(pontuacaoAtual);
     
         //obtém as respostas do banco de dados
@@ -95,7 +104,7 @@ const PaginaQuestao4 = () => {
           setRespostaSalva(respostaSelecionada);
     
           //navega para o gabarito, passando o id do usuário junto.
-          navigate('/gabarito', { state: { userId } });
+          navigate('/gabarito', { state: { userId, tempoRestante: tempoRestante - 1 } });
         }
       } catch (error) {
         console.error('Erro ao salvar resposta:', error);
@@ -106,7 +115,7 @@ const PaginaQuestao4 = () => {
       try {
         //verificar se o ID do usuário está definido
         if (!userId) {
-          console.log('ID do usuário não definido. Redirecionando para a página de login.');
+          //console.log('ID do usuário não definido. Redirecionando para a página de login.');
           navigate('/');
           return;
         }
@@ -191,6 +200,13 @@ const PaginaQuestao4 = () => {
     );
   };
 
+  const formatarTempo = (segundos) => {
+    const horas = Math.floor(segundos / 3600);
+    const minutos = Math.floor((segundos % 3600) / 60);
+    const segundosRestantes = segundos % 60;
+  
+    return `${horas}h ${minutos}m ${segundosRestantes}s`;
+  };
   
   
   return (
@@ -204,8 +220,8 @@ const PaginaQuestao4 = () => {
           </div>
           <div className='header-right'>
             <span>Prova: Ciências da Natureza e suas tecnologias </span>
-            <span>Tempo: 1m.20s</span>
           </div>
+            <span>Tempo restante: {formatarTempo(tempoRestante)}</span>
         </header>
 
         
@@ -227,6 +243,7 @@ const PaginaQuestao4 = () => {
 
         <div className='opcoes-container'>
         <h6>O valor da receita mínima esperada, em bilhão de reais, será de:</h6>
+        </div>
 
         <div className="opcoes-lista">
           <ul>
@@ -291,11 +308,17 @@ const PaginaQuestao4 = () => {
         </ul>
         </div>
         
-      </div>
+      
       <div className='botoes-container'>
           <button onClick={handleRevisarDepois}>Revisar Depois</button>
           <button onClick={handleSalvarResposta}>Salvar</button>
         </div>
+        <button
+          onClick={() => navigate('/')}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px'}}
+        >
+          Sair <IoLogOutOutline />
+        </button>
     </div>
   );
 };
